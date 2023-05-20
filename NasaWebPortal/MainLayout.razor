@@ -1,0 +1,16 @@
+﻿@inherits LayoutComponentBase
+<div class="grid-container">
+    <div class="grid-row">
+        <div class="grid-col-3">
+            <Navbar></Navbar>
+        </div>
+        <div class="grid-col-9">
+            <main>
+                @Body
+            </main>
+        </div>
+    </div>
+    <div class="grid-row position-fixed bottom-0">
+        <Footer></Footer>
+    </div>
+</div>

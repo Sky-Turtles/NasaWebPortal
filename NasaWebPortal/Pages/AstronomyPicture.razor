@@ -1,0 +1,33 @@
+﻿@page "/astro-pic"
+@using NasaWebPortal.Service
+@using NasaWebPortal.DTO
+@inject NasaHttpService NHS
+<div class="grid-container-desktop grid-container margin-bottom-5">
+    <h3 class="font-heading-lg">Astronomy Picture</h3>
+    <hr />
+    @if(this.astroPic != null)
+    {
+        <h2 class="font-ui-lg">
+            @astroPic.Title
+        </h2>
+        <img src="@astroPic.Url" />
+        <p class="font-ui-lg">
+            @astroPic.Explanation
+        </p>
+    }
+</div>
+
+@code {
+    private AstroPic astroPic;
+
+    public AstronomyPicture()
+    {
+        this.NHS = new();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.astroPic = await NHS.CallAPOD();
+    }
+
+}

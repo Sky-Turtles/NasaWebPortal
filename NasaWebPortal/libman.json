@@ -1,0 +1,11 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "provider": "unpkg",
+      "library": "@uswds/uswds@3.4.1",
+      "destination": "wwwroot/lib/uswds/uswds/"
+    }
+  ]
+}

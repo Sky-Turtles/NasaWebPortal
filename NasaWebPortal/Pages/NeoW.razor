@@ -1,0 +1,153 @@
+﻿@page "/neo-w"
+@using NasaWebPortal.DTO.Neo
+@using NasaWebPortal.Service
+@inject NasaHttpService NHS
+@inject IJSRuntime JSRuntime
+<div class="grid-container-desktop grid-container margin-bottom-15 padding-bottom-15">
+    <h3 class="font-heading-lg">Near Earth Objects</h3>
+    <hr />
+    @if(neoData != null)
+    {
+        <select class="usa-select" @bind="neoId" @onclick="(async () => { await SetNeo(neoId);})">
+            <option selected>
+                -- Please select a N.E.O. --
+            </option>
+            @foreach (var neo in neoData.NeoData)
+            {
+                <option value="@neo.Id">@neo.Name</option>
+            }
+        </select>
+        <hr />
+        @if(neoDisplay != null)
+        {
+            <div class="bg-base-light">
+                <div class="grid-row bg-base-darker">
+                   <h2 class="font-heading-lg text-base-lighter">
+                     Full Name: @neoDisplay.Name
+                   </h2> 
+                </div>
+                <div class="grid-row bg-base-darker">
+                    <div class="grid-col">
+                        <h4 class="font-heading-md text-base-lighter">
+                            Base Information:
+                        </h4>
+                        <ul class="usa-list usa-list--unstyled">
+                            <li class="text-base-lighter">
+                              Name:  @neoDisplay.NameLimited
+                            </li>
+                            <li class="text-base-lighter">
+                              Designation:  @neoDisplay.Designation
+                            </li>
+                            <li class="text-base-lighter">
+                               Orbit Class Type: @neoDisplay.OrbitalData.OrbitClass.OrbitClassType
+                            </li>
+                            <li class="text-base-lighter">
+                               Orbit Description: @neoDisplay.OrbitalData.OrbitClass.OrbitClassDescription
+                            </li>
+                            <li class="text-base-lighter">
+                                <h5 class="font-heading-md">
+                                    Is Potential Danger?
+                                </h5>
+                               @if(neoDisplay.IsPotentiallyHazardousAsteroid)
+                                {
+                                    <p>
+                                        Yes
+                                    </p>
+                                }
+                                else
+                                {
+                                    <p>
+                                        No
+                                    </p>
+                                }
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="grid-col usa-list--scrollable">
+                        <h4 class="font-heading-md text-base-lighter">
+                            Close Approach Objects:
+                        </h4>
+                        @foreach(var cao in neoDisplay.CloseApproachData.Take(10))
+                        {
+                            <ul class="usa-list usa-list--unstyled usa-accordion">
+                                <li >
+                                    <h5 class="font-heading-md text-base-lighter usa-accordion__heading">
+                                        <button class="usa-accordion__button" aria-expanded="@cao.IsVisable" @onclick="CAOSwitcher(cao).Wait">
+                                                @cao.OrbitingBody
+                                        </button>
+                                    </h5>
+                                </li>
+                                <div class="usa-accordion__content usa-prose" hidden="@cao.IsVisable">
+                                    <li>
+                                        <h5 class="font-heading-md text-base-darker">
+                                            Relative Velocity
+                                        </h5>
+                                        <ul class="usa-list usa-list--unstyled">
+                                            <li class="text-base-darker">
+                                              Kilometers per hour:  @cao.RelativeVelocity.KPH
+                                            </li>
+                                            <li class="text-base-darker">
+                                                Miles per hour: @cao.RelativeVelocity.MPH
+                                            </li>
+                                        </ul>
+                                    </li>
+                                    <li>
+                                        <h5 class="font-heading-md text-base-darker">
+                                            Miss Distance
+                                        </h5>
+                                        <ul class="usa-list usa-list--unstyled">
+                                            <li class="text-base-darker">
+                                               Astronomical: @cao.MissDistance.Astronomical
+                                            </li>
+                                            <li class="text-base-darker">
+                                                Lunar: @cao.MissDistance.Lunar
+                                            </li>
+                                        </ul>
+                                    </li>
+                                </div>
+                            </ul>
+                            <hr />
+                        }
+                    </div>
+                </div>
+            </div>
+
+
+        }   
+    }
+
+</div>
+
+@code {
+    private Neo neoData;
+    private NeoData neoDisplay;
+    private string neoId;
+    public NeoW()
+    {
+        this.NHS = new();
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.neoData = await this.NHS.GetNeoDataAsync();
+        JSRuntime.InvokeVoidAsync("console.log", this.neoData);
+
+    }
+
+    private async Task SetNeo(string id)
+    {
+        this.neoDisplay = neoData.NeoData.Where(e => e.Id == id).FirstOrDefault();
+    }
+
+    private async Task CAOSwitcher(CloseApproachData cao)
+    {
+        if(cao.IsVisable == false)
+        {
+            cao.IsVisable = true;
+        }
+        else
+        {
+            cao.IsVisable = false;            
+        }
+    }
+}
