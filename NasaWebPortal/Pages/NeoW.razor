@@ -20,13 +20,13 @@
         <hr />
         @if(neoDisplay != null)
         {
-            <div class="bg-base-light">
-                <div class="grid-row bg-base-darker">
+            <div class="bg-base-light padding-5">
+                <div class="grid-row bg-base-darker padding-5">
                    <h2 class="font-heading-lg text-base-lighter">
                      Full Name: @neoDisplay.Name
                    </h2> 
                 </div>
-                <div class="grid-row bg-base-darker">
+                <div class="grid-row bg-base-darker padding-5">
                     <div class="grid-col">
                         <h4 class="font-heading-md text-base-lighter">
                             Base Information:
@@ -72,12 +72,12 @@
                             <ul class="usa-list usa-list--unstyled usa-accordion">
                                 <li >
                                     <h5 class="font-heading-md text-base-lighter usa-accordion__heading">
-                                        <button class="usa-accordion__button" aria-expanded="@cao.IsVisable" @onclick="CAOSwitcher(cao).Wait">
+                                        <button class="usa-accordion__button" aria-expanded="true" aria-controls="@cao.ApproachId">
                                                 @cao.OrbitingBody
                                         </button>
                                     </h5>
                                 </li>
-                                <div class="usa-accordion__content usa-prose" hidden="@cao.IsVisable">
+                                <div class="usa-accordion__content usa-prose" id="@cao.ApproachId">
                                     <li>
                                         <h5 class="font-heading-md text-base-darker">
                                             Relative Velocity
@@ -137,17 +137,5 @@
     private async Task SetNeo(string id)
     {
         this.neoDisplay = neoData.NeoData.Where(e => e.Id == id).FirstOrDefault();
-    }
-
-    private async Task CAOSwitcher(CloseApproachData cao)
-    {
-        if(cao.IsVisable == false)
-        {
-            cao.IsVisable = true;
-        }
-        else
-        {
-            cao.IsVisable = false;            
-        }
     }
 }
