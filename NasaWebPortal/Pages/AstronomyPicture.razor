@@ -2,7 +2,7 @@
 @using NasaWebPortal.Service
 @using NasaWebPortal.DTO
 @inject NasaHttpService NHS
-<div class="grid-container-desktop grid-container margin-bottom-5">
+<div class="grid-container-desktop grid-container margin-bottom-5 padding-bottom-5">
     <h3 class="font-heading-lg">Astronomy Picture</h3>
     <hr />
     @if(this.astroPic != null)
@@ -11,7 +11,7 @@
             @astroPic.Title
         </h2>
         <img src="@astroPic.Url" />
-        <p class="font-ui-lg">
+        <p class="font-ui-md">
             @astroPic.Explanation
         </p>
     }
